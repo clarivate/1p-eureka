@@ -18,5 +18,5 @@ task copyLibs(type: Copy) {
 }
 
 war {
-    from (project(':eureka-resources').file('build/resources/main'))
+    from (project(':eureka-resources').file('src/main/resources'))
 }
