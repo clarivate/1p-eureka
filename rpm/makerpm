@@ -4,10 +4,9 @@
 nurl="http://abc:123@http://repo.1p.thomsonreuters.com/nexus"
 
 assemblydir=target/rpm-assembly
-appsdir=$assemblydir/opt/reuters/apps
-webappsdir=$appsdir/webapps
-tomcatdir=$appsdir/tomcat
-asgardconfdir=$tomcatdir/.asgard
+#tomcatdir=$assemblydir/var/lib/tomcat7
+tomcatdir=$assemblydir/usr/share/tomcat7
+webappsdir=$tomcatdir/webapps
 outputdir=target
 
 echo "Making directories"
@@ -16,27 +15,26 @@ mkdir -p $outputdir
 rm -rf $assemblydir
 mkdir -p $assemblydir
 mkdir -p $webappsdir
-mkdir -p $asgardconfdir
 
 echo "Copying files for RPM"
-cp eureka-server/build/libs/eureka-server-*.war $webappsdir/eureka.war
+cp eureka-server/build/libs/eureka-server*.war $webappsdir/ROOT.war
 
 rm -f $outputdir/*.rpm
 
 echo "Making the RPM"
-fpm --verbose -s dir -t rpm -C $assemblydir --prefix / -v "$BRANCH" -n "asgard" -a "x86_64" \
+fpm --verbose -s dir -t rpm -C $assemblydir --prefix / -v "$BRANCH" -n "eureka" -a "x86_64" \
 --after-install rpm/scripts/postinstall.sh \
 --before-remove rpm/scripts/preremove.sh \
---description "Eureka" \
+--description "Asgard" \
 --inputs rpm/inputs --maintainer "<jfenner@kenzanmedia.com>" \
---iteration "$BUILD_NUMBER" --rpm-user asgard --rpm-group asgard -p $outputdir
+--iteration "$BUILD_NUMBER" --rpm-user root --rpm-group tomcat -p $outputdir
 
 # Upload to Nexus
 #mvn deploy:deploy-file \
 #    -Durl=$nurl \
 #    -DrepositoryId=reuter-applications \
 #    -DgroupId=reuterapps \
-#    -DartifactId=reuter-asgard \
+#    -DartifactId=reuter-eureka \
 #    -Dversion=$BRANCH-$BUILD_NUMBER  \
 #    -Dpackaging=rpm \
 #    -Dfile=`ls $outputdir/*.rpm`
