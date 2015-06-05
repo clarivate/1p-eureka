@@ -22,7 +22,7 @@ cp eureka-server/build/libs/eureka-server*.war $webappsdir/ROOT.war
 rm -f $outputdir/*.rpm
 
 echo "Making the RPM"
-fpm --verbose -s dir -t rpm -C $assemblydir --prefix / -v "$BRANCH" -n "eureka" -a "x86_64" \
+~/bin/fpm --verbose -s dir -t rpm -C $assemblydir --prefix / -v "$BRANCH" -n "eureka" -a "x86_64" \
 --after-install rpm/scripts/postinstall.sh \
 --before-remove rpm/scripts/preremove.sh \
 --description "Asgard" \
